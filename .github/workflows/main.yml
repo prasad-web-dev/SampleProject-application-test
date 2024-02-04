@@ -39,17 +39,19 @@ jobs:
         
         # Push the Docker image to ECR
         docker push $ecr_repository:$short_sha
+        echo "::set-output name=image::$ecr_repository:$short_sha"
 
     - name: Deploy to App Runner Image
       id: deploy-apprunner
       uses: awslabs/amazon-app-runner-deploy@main
       with:
         service: feb-app
-        image: 992382458134.dkr.ecr.ap-south-1.amazonaws.com/pythonapp:b1e331f
+        image: ${{ steps.build-image.outputs.image }}
+          # 992382458134.dkr.ecr.ap-south-1.amazonaws.com/pythonapp:b1e331f
         access-role-arn: arn:aws:iam::992382458134:role/service-role/AppRunnerECRAccessRole
         region: ap-south-1
         cpu : 1
-        memory : 2
+        memory : 4
         port : 8000
         # Deprecated: wait-for-service-stability: true
         # The new way to control service stability timeout
