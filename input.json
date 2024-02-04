@@ -1,3 +1,6 @@
 {
+
+    "cpu": 1024,
+    "memory": 2048,
     "ServiceArn": "arn:aws:apprunner:ap-south-1:992382458134:service/pythonapp-feb/c8cd08b678634a86bf8e1c678dc609f0"
 }

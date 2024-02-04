@@ -21,6 +21,7 @@ jobs:
         aws-region: ap-south-1
 
     - name: Build and push Docker image to ECR
+      id: build-image
       run: |
         short_sha=$(git rev-parse --short ${{ github.sha }})
         ecr_repository="992382458134.dkr.ecr.ap-south-1.amazonaws.com/pythonapp"
@@ -38,3 +39,21 @@ jobs:
         
         # Push the Docker image to ECR
         docker push $ecr_repository:$short_sha
+        echo "images name: ${{ steps.build-image.outputs.image }}"
+
+    # - name: Deploy to App Runner Image
+    #   id: deploy-apprunner
+    #   uses: awslabs/amazon-app-runner-deploy@main
+    #   with:
+    #     service: app-runner-git-deploy-service
+    #     image: ${{ steps.build-image.outputs.image }}
+    #     access-role-arn: ${{ secrets.ROLE_ARN }}
+    #     region: ap-south-1
+    #     cpu : 1
+    #     memory : 2
+    #     # Deprecated: wait-for-service-stability: true
+    #     # The new way to control service stability timeout
+    #     wait-for-service-stability-seconds: 1200
+      
+    #   # - name: App Runner URL
+    #   #   run: echo "App runner URL ${{ steps.deploy-apprunner.outputs.service-url }}" 
