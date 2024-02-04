@@ -1,0 +1,40 @@
+name: ECR Build and Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+
+    - name: Build and push Docker image to ECR
+      run: |
+        short_sha=$(git rev-parse --short ${{ github.sha }})
+        ecr_repository="992382458134.dkr.ecr.ap-south-1.amazonaws.com/pythonapp"
+        
+        # Build the Docker image
+        docker build -t $ecr_repository:$short_sha .
+        
+        # Authenticate Docker to your ECR registry
+        # aws ecr get-login-password --region your-aws-region | docker login --username AWS --password-stdin $ecr_repository
+        aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 992382458134.dkr.ecr.ap-south-1.amazonaws.com
+        
+        # Tag the Docker image
+        # docker tag $ecr_repository:$short_sha $ecr_repository:latest
+        
+        # Push the Docker image to ECR
+        docker push $ecr_repository:$short_sha
+
