@@ -44,7 +44,7 @@ jobs:
       id: deploy-apprunner
       uses: awslabs/amazon-app-runner-deploy@main
       with:
-        service: app-runner-git-deploy-service
+        service: feb-app
         image: 992382458134.dkr.ecr.ap-south-1.amazonaws.com/pythonapp:${{ github.sha }}
         access-role-arn: arn:aws:iam::992382458134:role/service-role/AppRunnerECRAccessRole
         region: ap-south-1
