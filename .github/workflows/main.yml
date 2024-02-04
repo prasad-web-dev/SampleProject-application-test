@@ -39,7 +39,7 @@ jobs:
         
         # Push the Docker image to ECR
         docker push $ecr_repository:$short_sha
-        echo "images name: ${{ steps.build-image.outputs.image }}"
+        echo "images name:"" ${{ steps.build-image.outputs.image }}
 
     # - name: Deploy to App Runner Image
     #   id: deploy-apprunner
