@@ -41,11 +41,5 @@ jobs:
 
     - name: Deploy to AWS App Runner
       run: |
-        aws apprunner create-service \
-          --service-name pythonapp \
-          --source-configuration imageRepository.url=$ecr_repository,imageRepository.imageIdentifier=$short_sha \
-          --instance-configuration instances=1
-        
-        aws apprunner wait service-deployment-complete \
-          --service-arn $(aws apprunner describe-service --service-name pythonapp --query 'Service.ServiceArn' --output text)
-  
+        aws apprunner start-deployment --service-arn "arn:aws:apprunner:ap-south-1:992382458134:service/pythonapp/32261761e70743289bf2695cbb2e8c5e" --source-configuration imageRepository.imageUri="$ecr_repository:$short_sha"
+       
