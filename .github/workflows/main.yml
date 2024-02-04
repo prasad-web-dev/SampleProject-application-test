@@ -24,7 +24,7 @@ jobs:
       run: |
         short_sha=$(git rev-parse --short ${{ github.sha }})
         ecr_repository="992382458134.dkr.ecr.ap-south-1.amazonaws.com/pythonapp"
-        
+        ls -lha
         # Build the Docker image
         docker build -t $ecr_repository:$short_sha .
         
