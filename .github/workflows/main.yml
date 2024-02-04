@@ -50,6 +50,7 @@ jobs:
         region: ap-south-1
         cpu : 1
         memory : 2
+        port : 8000
         # Deprecated: wait-for-service-stability: true
         # The new way to control service stability timeout
         wait-for-service-stability-seconds: 1200
