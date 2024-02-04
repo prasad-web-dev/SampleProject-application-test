@@ -26,6 +26,7 @@ jobs:
         ecr_repository="992382458134.dkr.ecr.ap-south-1.amazonaws.com/pythonapp"
         ls -lha
         # Build the Docker image
+        cd SampleProject
         docker build -t $ecr_repository:$short_sha .
         
         # Authenticate Docker to your ECR registry
