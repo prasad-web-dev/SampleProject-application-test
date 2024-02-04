@@ -41,4 +41,4 @@ jobs:
 
     - name: Deploy to AWS App Runner
       run: |
-        aws apprunner create-deployment --service-arn "arn:aws:apprunner:ap-south-1:992382458134:service/pythonapp/32261761e70743289bf2695cbb2e8c5e" --image-configuration imageUri="$ecr_repository:$short_sha"
+        aws apprunner create-deployment --service-arn "arn:aws:apprunner:ap-south-1:992382458134:service/pythonapp-feb/c8cd08b678634a86bf8e1c678dc609f0" --image-configuration imageUri="$ecr_repository:$short_sha"
