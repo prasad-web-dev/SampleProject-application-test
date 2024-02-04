@@ -45,7 +45,7 @@ jobs:
       uses: awslabs/amazon-app-runner-deploy@main
       with:
         service: feb-app
-        image: ${{ steps.build-image.outputs.image}}:${{ github.sha }}
+        image: ${{ steps.build-image.outputs.image}}
         access-role-arn: arn:aws:iam::992382458134:role/service-role/AppRunnerECRAccessRole
         region: ap-south-1
         cpu : 1
