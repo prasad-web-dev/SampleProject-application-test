@@ -39,3 +39,13 @@ jobs:
         # Push the Docker image to ECR
         docker push $ecr_repository:$short_sha
 
+    - name: Deploy to AWS App Runner
+      run: |
+        aws apprunner create-service \
+          --service-name pythonapp \
+          --source-configuration imageRepository.url=$ecr_repository,imageRepository.imageIdentifier=$short_sha \
+          --instance-configuration instances=1
+        
+        aws apprunner wait service-deployment-complete \
+          --service-arn $(aws apprunner describe-service --service-name pythonapp --query 'Service.ServiceArn' --output text)
+  
