@@ -45,7 +45,7 @@ jobs:
       uses: awslabs/amazon-app-runner-deploy@main
       with:
         service: feb-app
-        image: 992382458134.dkr.ecr.ap-south-1.amazonaws.com/pythonapp:${{ github.sha }}
+        image: ${{ steps.build-image.outputs.image}}:${{ github.sha }}
         access-role-arn: arn:aws:iam::992382458134:role/service-role/AppRunnerECRAccessRole
         region: ap-south-1
         cpu : 1
@@ -53,4 +53,4 @@ jobs:
         # Deprecated: wait-for-service-stability: true
         # The new way to control service stability timeout
         wait-for-service-stability-seconds: 1200
-        
+
