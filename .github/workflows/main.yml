@@ -1,0 +1,59 @@
+name: ECR Build and Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+
+    - name: Build and push Docker image to ECR
+      id: build-image
+      run: |
+        short_sha=$(git rev-parse --short ${{ github.sha }})
+        ecr_repository="992382458134.dkr.ecr.ap-south-1.amazonaws.com/pythonapp"
+        ls -lha
+        # Build the Docker image
+        cd SampleProject
+        docker build -t $ecr_repository:$short_sha .
+        
+        # Authenticate Docker to your ECR registry
+        # aws ecr get-login-password --region your-aws-region | docker login --username AWS --password-stdin $ecr_repository
+        aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 992382458134.dkr.ecr.ap-south-1.amazonaws.com
+        
+        # Tag the Docker image
+        # docker tag $ecr_repository:$short_sha $ecr_repository:latest
+        
+        # Push the Docker image to ECR
+        docker push $ecr_repository:$short_sha
+        echo "::set-output name=image::$ecr_repository:$short_sha"
+
+    # - name: Deploy to App Runner Image
+    #   id: deploy-apprunner
+    #   uses: awslabs/amazon-app-runner-deploy@main
+    #   with:
+    #     service: feb-app
+    #     image: ${{ steps.build-image.outputs.image }}
+    #       # 992382458134.dkr.ecr.ap-south-1.amazonaws.com/pythonapp:b1e331f
+    #     access-role-arn: arn:aws:iam::992382458134:role/service-role/AppRunnerECRAccessRole
+    #     region: ap-south-1
+    #     cpu : 0.25
+    #     memory : 0.5
+    #     port : 8000
+    #     # Deprecated: wait-for-service-stability: true
+    #     # The new way to control service stability timeout
+    #     wait-for-service-stability-seconds: 1200
+
